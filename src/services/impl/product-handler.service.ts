@@ -60,8 +60,10 @@ export class ProductHandlerService {
 	 * Decrements product stock and updates database
 	 */
 	public async decrementStock(product: Product, database: Database): Promise<void> {
-		product.available -= 1;
-		await database.update(products).set(product).where(eq(products.id, product.id));
+		const newAvailable = product.available - 1;
+		await database.update(products)
+			.set({available: newAvailable})
+			.where(eq(products.id, product.id));
 	}
 
 	/**
