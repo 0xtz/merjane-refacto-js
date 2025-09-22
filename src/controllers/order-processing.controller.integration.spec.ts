@@ -18,7 +18,7 @@ import {
 import {type Database} from '@/db/type.js';
 import {buildFastify} from '@/fastify.js';
 
-describe('MyController Integration Tests', () => {
+describe('Order Processing Controller Integration Tests', () => {
 	let fastify: FastifyInstance;
 	let database: Database;
 	let notificationServiceMock: DeepMockProxy<INotificationService>;
@@ -37,7 +37,7 @@ describe('MyController Integration Tests', () => {
 		await fastify.close();
 	});
 
-	it('ProcessOrderShouldReturn', async () => {
+	it('should process order successfully', async () => {
 		const client = supertest(fastify.server);
 		const allProducts = createProducts();
 		const orderId = await database.transaction(async tx => {

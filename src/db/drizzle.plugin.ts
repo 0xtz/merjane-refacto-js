@@ -1,14 +1,15 @@
-import {type FastifyPluginAsync} from 'fastify';
-import fastifyPlugin from 'fastify-plugin';
 import SqliteDatabase from 'better-sqlite3';
 import {drizzle} from 'drizzle-orm/better-sqlite3';
+import type {FastifyPluginAsync} from 'fastify';
+import fastifyPlugin from 'fastify-plugin';
 import {CONFIG} from '../configuration/index.js';
 import * as schema from './schema.js';
-import {type Database} from './type.js';
+import type {Database} from './type.js';
 
 declare module 'fastify' {
 	interface FastifyInstance { // eslint-disable-line @typescript-eslint/consistent-type-definitions
 		database: Database;
+		db: Database;
 	}
 }
 
@@ -22,7 +23,7 @@ export const drizzlePlugin: FastifyPluginAsync = fastifyPlugin(
 			...(appConfig.env === 'PROD' ? {} : {logger: true}),
 		});
 
-		// Make Prisma Client available through the fastify server instance: server.prisma
+		// Make database available through the fastify server instance
 		server.decorate('database', database);
 
 		server.addHook('onClose', async () => {
