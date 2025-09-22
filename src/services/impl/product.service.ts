@@ -5,6 +5,11 @@ import {products, type Product} from '@/db/schema.js';
 import {type Database} from '@/db/type.js';
 
 export class ProductService {
+	/**
+	 * Number of milliseconds in a day
+	 */
+	private static readonly MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+
 	private readonly ns: INotificationService;
 	private readonly db: Database;
 
@@ -21,8 +26,7 @@ export class ProductService {
 
 	public async handleSeasonalProduct(p: Product): Promise<void> {
 		const currentDate = new Date();
-		const d = 1000 * 60 * 60 * 24;
-		if (new Date(currentDate.getTime() + (p.leadTime * d)) > p.seasonEndDate!) {
+		if (new Date(currentDate.getTime() + (p.leadTime * ProductService.MILLISECONDS_PER_DAY)) > p.seasonEndDate!) {
 			this.ns.sendOutOfStockNotification(p.name);
 			p.available = 0;
 			await this.db.update(products).set(p).where(eq(products.id, p.id));
