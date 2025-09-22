@@ -9,7 +9,6 @@ import type {Database} from './type.js';
 declare module 'fastify' {
 	interface FastifyInstance { // eslint-disable-line @typescript-eslint/consistent-type-definitions
 		database: Database;
-		db: Database;
 	}
 }
 
